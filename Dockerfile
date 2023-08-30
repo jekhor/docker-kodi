@@ -18,10 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-ARG UBUNTU_RELEASE=impish
+ARG UBUNTU_RELEASE=jammy
 FROM ubuntu:$UBUNTU_RELEASE
 
-ARG KODI_VERSION=19.4
+ARG KODI_VERSION=20.2
 
 # https://github.com/ehough/docker-nfs-server/pull/3#issuecomment-387880692
 ARG DEBIAN_FRONTEND=noninteractive
@@ -30,7 +30,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update                                                                  && \
     apt-get install -y --no-install-recommends gpg-agent software-properties-common && \
     add-apt-repository ppa:team-xbmc/ppa                                            && \
-    apt-get -y purge openssl gpg-agent software-properties-common                   && \
     apt-get -y --purge autoremove                                                   && \
     rm -rf /var/lib/apt/lists/*
 
@@ -48,7 +47,7 @@ ARG KODI_EXTRA_PACKAGES=
 #  - va-driver-all                the full suite of drivers for the Video Acceleration API (VA API)
 RUN packages="                                               \
                                                              \
-    ca-certificates                                          \
+    libnss3                                                  \
     kodi=6:${KODI_VERSION}+*                                 \
     kodi-eventclients-kodi-send                              \
     kodi-inputstream-adaptive                                \
@@ -57,6 +56,8 @@ RUN packages="                                               \
     kodi-peripheral-xarcade                                  \
     locales                                                  \
     pulseaudio                                               \
+    pulseaudio-module-bluetooth                              \
+    bluez						     \
     tzdata                                                   \
     va-driver-all                                            \
     ${KODI_EXTRA_PACKAGES}"                               && \
